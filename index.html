@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calcolatore Prezzo al Kg</title>
-    <link rel="manifest" href="/PrezzoAlKg/manifest.json">
     <!-- Inclusione di Tailwind CSS per lo styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -23,6 +22,8 @@
             box-shadow: none;
         }
     </style>
+    <!-- Link al manifest.json - PERCORSO CRITICO -->
+    <link rel="manifest" href="/PrezzoAlKg/manifest.json">
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
     <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
@@ -85,19 +86,20 @@
                 resultDiv.textContent = `Prezzo al Kg: € ${pricePerKg.toFixed(2)}`;
                 resultDiv.classList.remove('hidden');
             });
+
+            // Registrazione del Service Worker - PERCORSO CRITICO
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/PrezzoAlKg/service-worker.js')
+                        .then(registration => {
+                            console.log('Service Worker registrato con successo:', registration);
+                        })
+                        .catch(error => {
+                            console.error('Registrazione Service Worker fallita:', error);
+                        });
+                });
+            }
         });
-        // Registrazione del Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/PrezzoAlKg/service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker registrato con successo:', registration);
-                    })
-                    .catch(error => {
-                        console.error('Registrazione Service Worker fallita:', error);
-                    });
-            });
-        };
     </script>
 </body>
 </html>
