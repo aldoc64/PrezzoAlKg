@@ -2,7 +2,7 @@
   "name": "Calcolatore Prezzo al Kg",
   "short_name": "Prezzo al Kg",
   "description": "Calcola il prezzo al chilogrammo di un prodotto.",
-  "start_url": "./index.html",  
+  "start_url": "/PrezzoAlKg/index.html",
   "display": "standalone",
   "background_color": "#f3f4f6",
   "theme_color": "#2563eb",
