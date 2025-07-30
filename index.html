@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore Prezzo al Kg</title>
+    <!-- Inclusione di Tailwind CSS per lo styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Stili personalizzati per il font Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Sfondo grigio chiaro */
+        }
+        /* Animazione per il pulsante */
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-calculate:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Calcolatore Prezzo al Kg</h1>
+
+        <div class="mb-4">
+            <label for="finalPrice" class="block text-gray-700 text-sm font-semibold mb-2">Prezzo finale (€):</label>
+            <input type="number" id="finalPrice" placeholder="Es: 5.99" step="0.01" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" aria-label="Prezzo finale">
+        </div>
+
+        <div class="mb-6">
+            <label for="weightGrams" class="block text-gray-700 text-sm font-semibold mb-2">Peso (grammi):</label>
+            <input type="number" id="weightGrams" placeholder="Es: 250" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" aria-label="Peso in grammi">
+        </div>
+
+        <button id="calculateBtn" class="btn-calculate w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform">
+            Calcola Prezzo al Kg
+        </button>
+
+        <div id="result" class="mt-8 p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg text-center text-lg font-semibold hidden">
+            <!-- Il risultato verrà visualizzato qui -->
+        </div>
+
+        <div id="errorMessage" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-center text-sm hidden">
+            <!-- I messaggi di errore verranno visualizzati qui -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const finalPriceInput = document.getElementById('finalPrice');
+            const weightGramsInput = document.getElementById('weightGrams');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resultDiv = document.getElementById('result');
+            const errorMessageDiv = document.getElementById('errorMessage');
+
+            calculateBtn.addEventListener('click', () => {
+                // Nasconde i messaggi precedenti
+                resultDiv.classList.add('hidden');
+                errorMessageDiv.classList.add('hidden');
+                errorMessageDiv.textContent = ''; // Pulisce il testo dell'errore
+
+                const finalPrice = parseFloat(finalPriceInput.value);
+                const weightGrams = parseFloat(weightGramsInput.value);
+
+                // Validazione degli input
+                if (isNaN(finalPrice) || isNaN(weightGrams) || finalPrice < 0 || weightGrams <= 0) {
+                    errorMessageDiv.textContent = 'Per favore, inserisci valori numerici validi e positivi. Il peso deve essere maggiore di zero.';
+                    errorMessageDiv.classList.remove('hidden');
+                    return;
+                }
+
+                // Conversione del peso da grammi a chilogrammi
+                const weightKg = weightGrams / 1000;
+
+                // Calcolo del prezzo al chilogrammo
+                const pricePerKg = finalPrice / weightKg;
+
+                // Visualizzazione del risultato
+                resultDiv.textContent = `Prezzo al Kg: € ${pricePerKg.toFixed(2)}`;
+                resultDiv.classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
