@@ -22,7 +22,7 @@
             box-shadow: none;
         }
     </style>
-    <!-- Link al manifest.json - PERCORSO CRITICO -->
+    <!-- Link al manifest.json -->
     <link rel="manifest" href="/PrezzoAlKg/manifest.json">
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
@@ -87,7 +87,7 @@
                 resultDiv.classList.remove('hidden');
             });
 
-            // Registrazione del Service Worker - PERCORSO CRITICO
+            // Registrazione del Service Worker
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('/PrezzoAlKg/service-worker.js')
