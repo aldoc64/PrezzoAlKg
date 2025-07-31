@@ -7,8 +7,8 @@ const urlsToCache = [
   BASE_PATH + 'app.webmanifest', // AGGIORNATO QUI
   BASE_PATH + 'service-worker.js',
   BASE_PATH + 'icon-192x192.png',
-  BASE_PATH + 'icon-512x512.png',
-  'https://cdn.tailwindcss.com' // La CDN di Tailwind
+  BASE_PATH + 'icon-512x512.png'
+  // Rimosso: 'https://cdn.tailwindcss.com' - Le CDN esterne possono causare errori di caching
 ];
 
 self.addEventListener('install', event => {
