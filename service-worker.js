@@ -1,25 +1,44 @@
-const CACHE_NAME = 'price-calculator-v1';
+const CACHE_NAME = 'price-calculator-v4'; // Incrementato la versione della cache
+const BASE_PATH = '/PrezzoAlKg/'; // Definisci la base path del tuo repository
+
 const urlsToCache = [
-  '/PrezzoAlKg/', // La root del tuo repository con la capitalizzazione corretta
-  '/PrezzoAlKg/index.html',
-  '/PrezzoAlKg/manifest.json',
-  '/PrezzoAlKg/service-worker.js', // Aggiungi anche il service worker stesso alla cache
-  '/PrezzoAlKg/icon-192x192.png',
-  '/PrezzoAlKg/icon-512x512.png',
+  BASE_PATH, // La root del tuo repository
+  BASE_PATH + 'index.html',
+  BASE_PATH + 'app.webmanifest', // AGGIORNATO QUI
+  BASE_PATH + 'service-worker.js',
+  BASE_PATH + 'icon-192x192.png',
+  BASE_PATH + 'icon-512x512.png',
   'https://cdn.tailwindcss.com' // La CDN di Tailwind
 ];
 
 self.addEventListener('install', event => {
-  console.log('Service Worker: Evento Installazione');
+  console.log('Service Worker: Evento Installazione (v4)');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('Service Worker: Cache aperta, aggiungo URL');
-        return cache.addAll(urlsToCache);
-        
+        return Promise.allSettled(
+          urlsToCache.map(url => {
+            console.log(`Attempting to cache: ${url}`);
+            return cache.add(url);
+          })
+        ).then(results => {
+          results.forEach((result, index) => {
+            if (result.status === 'rejected') {
+              console.error(`Service Worker: Fallimento caching per ${urlsToCache[index]}:`, result.reason);
+            } else {
+              console.log(`Service Worker: Caching riuscito per ${urlsToCache[index]}`);
+            }
+          });
+          const failed = results.some(result => result.status === 'rejected');
+          if (failed) {
+            return Promise.reject(new Error('Alcuni URL non sono stati cachati. Controlla gli errori sopra.'));
+          }
+        });
       })
       .catch(error => {
-        console.error('Service Worker: Errore durante il caching degli URL:', error);
+        console.error('Service Worker: Errore grave durante l\'installazione:', error);
+        throw error;
       })
   );
 });
@@ -29,17 +48,15 @@ self.addEventListener('fetch', event => {
     caches.match(event.request)
       .then(response => {
         if (response) {
-          console.log('Service Worker: Servito dalla cache:', event.request.url);
           return response;
         }
-        console.log('Service Worker: Richiesta di rete per:', event.request.url);
         return fetch(event.request);
       })
   );
 });
 
 self.addEventListener('activate', event => {
-  console.log('Service Worker: Evento Attivazione');
+  console.log('Service Worker: Evento Attivazione (v4)');
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -54,4 +71,3 @@ self.addEventListener('activate', event => {
     })
   );
 });
-
